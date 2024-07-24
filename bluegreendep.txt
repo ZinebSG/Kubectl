@@ -1,0 +1,32 @@
+Démarrer Minikube
+minikube start --driver=docker
+
+Créer une application de démonstration v1 et v2
+
+Créer les Dockerfiles
+FROM nginx:alpine
+COPY index.html /usr/share/nginx/html/index.html
+
+Construire les images Docker
+docker build -t myapp:1.0 -f Dockerfile.v1 .
+docker build -t myapp:2.0 -f Dockerfile.v2 .
+
+Pousser les images vers Minikube
+eval $(minikube docker-env)
+docker build -t myapp:1.0 -f Dockerfile.v1 .
+docker build -t myapp:2.0 -f Dockerfile.v2 .
+
+Créer les déploiements Kubernetes
+vim deployment-v1.yaml
+vim deployment-v2.yaml
+
+kubectl apply -f deployment-v1.yaml
+kubectl apply -f deployment-v2.yaml
+
+
+Créer un service pour le déploiement blue-green
+
+kubectl apply -f service-v1.yaml
+kubectl apply -f service-v2.yaml
+
+minikube service myapp-service
